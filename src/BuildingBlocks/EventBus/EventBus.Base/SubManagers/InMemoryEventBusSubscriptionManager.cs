@@ -89,7 +89,7 @@ namespace EventBus.Base.SubManagers
             return _handlers[eventName].SingleOrDefault(e => e.HandlerType == handlerType);
         }
 
-        public Type GetSubscriptionTypeByName(string eventName) => _eventTypes.SingleOrDefault(e => e.Name == eventName);
+        public Type GetEventTypeByName(string eventName) => _eventTypes.SingleOrDefault(e => e.Name == eventName);
 
         public bool HasSubscriptionsForEvent<T>() where T : IntegrationEvent
         {
