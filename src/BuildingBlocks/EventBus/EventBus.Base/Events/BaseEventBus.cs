@@ -7,16 +7,16 @@ namespace EventBus.Base.Events
 {
     public abstract class BaseEventBus : IEventBus
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IEventBusSubscriptionManager _subscriptionManager;
+        public readonly IServiceProvider _serviceProvider;
+        public readonly IEventBusSubscriptionManager _subscriptionManager;
 
-        private EventBusConfiguration _configuration;
+        public EventBusConfiguration _configuration { get; set; }
 
         protected BaseEventBus(IServiceProvider serviceProvider,  EventBusConfiguration configuration)
         {
+            _configuration = configuration;
             _serviceProvider = serviceProvider;
             _subscriptionManager = new InMemoryEventBusSubscriptionManager(ProcessEventName);
-            _configuration = configuration;
         }
 
         public virtual string ProcessEventName(string eventName) 
@@ -38,6 +38,7 @@ namespace EventBus.Base.Events
         public virtual void Dispose()
         {
             _configuration = null;
+            _subscriptionManager.Clear();
         }
 
         public async Task<bool> ProcessEvent(string eventName, string message)
@@ -74,23 +75,14 @@ namespace EventBus.Base.Events
             return processed;
         }
 
-        public void Publish(IntegrationEvent @event)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Publish(IntegrationEvent @event);
 
-        public void Subscribe<T, TH>()
+        public abstract void Subscribe<T, TH>()
             where T : IntegrationEvent
-            where TH : IIntegrationEventHandler<T>
-        {
-            throw new NotImplementedException();
-        }
+            where TH : IIntegrationEventHandler<T>;
 
-        public void UnSubscribe<T, TH>()
+        public abstract void UnSubscribe<T, TH>()
             where T : IntegrationEvent
-            where TH : IIntegrationEventHandler<T>
-        {
-            throw new NotImplementedException();
-        }
+            where TH : IIntegrationEventHandler<T>;
     }
 }
