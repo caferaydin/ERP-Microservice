@@ -54,6 +54,7 @@ namespace EventBus.AzureService
         public override void Subscribe<T, TH>()
         {
             var eventName = typeof(T).Name;
+            eventName = ProcessEventName(eventName);
             
             if(!_subscriptionManager.HasSubscriptionsForEvent(eventName))
             {
@@ -70,6 +71,7 @@ namespace EventBus.AzureService
         public override void UnSubscribe<T, TH>()
         {
             var eventName = typeof(T).Name;
+            eventName = ProcessEventName(eventName);
 
             try
             {
@@ -141,7 +143,7 @@ namespace EventBus.AzureService
 
             try
             {
-                var rule = _managamentClient.GetRuleAsync(_configuration.DefaultTopicName, eventName, eventName)
+                var rule = _managamentClient.GetRuleAsync(_configuration.DefaultTopicName, GetSubName(eventName), eventName)
                     .GetAwaiter().GetResult();
                 ruleExists = rule != null;
             }
